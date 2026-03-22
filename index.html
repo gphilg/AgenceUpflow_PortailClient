@@ -9,6 +9,8 @@
     :root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--surface3:#252525;--border:rgba(255,255,255,0.07);--border-strong:rgba(255,255,255,0.13);--text:#ffffff;--text-2:#a0a0a0;--text-3:#555555;--green:#83f752;--green-dim:rgba(131,247,82,0.12);--green-dim2:rgba(131,247,82,0.06);--red:#ff4d4d;--red-dim:rgba(255,77,77,0.1);--radius:14px;--radius-sm:9px;}
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
     body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* LOGIN */
     #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
     .login-box{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--border-strong);border-radius:20px;padding:32px 28px;}
     .login-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
@@ -19,26 +21,32 @@
     .login-input{width:100%;padding:11px 14px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:500;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);outline:none;margin-bottom:14px;transition:border-color 0.15s;}
     .login-input:focus{border-color:rgba(131,247,82,0.4);}
     .login-btn{width:100%;padding:12px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.3px;border-radius:var(--radius-sm);border:none;background:var(--green);color:#0a0a0a;cursor:pointer;margin-top:4px;transition:opacity 0.15s;}
-    .login-btn:active{opacity:0.85;}
     .login-btn:disabled{opacity:0.5;cursor:not-allowed;}
     .login-error{display:none;font-size:12px;font-weight:600;color:var(--red);background:var(--red-dim);border:1px solid rgba(255,77,77,0.2);border-radius:var(--radius-sm);padding:9px 12px;margin-top:12px;text-align:center;}
     .login-error.show{display:block;}
     .pwd-wrap{position:relative;margin-bottom:14px;}
-    .pwd-wrap .login-input{margin-bottom:0;padding-right:44px;}
-    .pwd-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px;line-height:1;}
+    .pwd-wrap .login-input{margin-bottom:0;padding-right:44px;width:100%;}
+    .pwd-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer;font-size:14px;padding:4px;}
+
+    /* APP */
     #app{display:none;}
     .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;}
     .brand-row{display:flex;align-items:center;gap:10px;}
     .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(131,247,82,0.6);flex-shrink:0;}
     .garage-name{font-size:15px;font-weight:700;letter-spacing:0.5px;}
-    .topbar-right{display:flex;align-items:center;gap:10px;}
+    .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
     .today-badge{font-size:11px;font-weight:600;background:var(--green-dim);color:var(--green);padding:4px 11px;border-radius:99px;border:1px solid rgba(131,247,82,0.2);letter-spacing:0.3px;white-space:nowrap;}
+    .refresh-badge{font-size:11px;font-weight:600;color:var(--text-3);padding:4px 8px;cursor:pointer;background:none;border:1px solid var(--border-strong);border-radius:99px;font-family:'Montserrat',sans-serif;}
     .logout-btn{font-size:11px;font-weight:600;color:var(--text-3);background:none;border:1px solid var(--border-strong);border-radius:99px;padding:4px 10px;cursor:pointer;font-family:'Montserrat',sans-serif;}
     .add-btn-top{display:none;padding:7px 14px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.3px;border-radius:99px;border:none;background:var(--green);color:#0a0a0a;cursor:pointer;white-space:nowrap;}
+
+    /* LOADING */
     .loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;}
     .spinner{width:24px;height:24px;border:2px solid var(--border-strong);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .loading-text{font-size:12px;font-weight:500;color:var(--text-3);}
+
+    /* DESKTOP */
     .desktop-board{display:none;padding:20px;gap:14px;}
     .col{flex:1;min-width:0;}
     .col-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:0 2px;}
@@ -49,6 +57,8 @@
     .col-title{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-2);}
     .col-count{font-size:10px;font-weight:700;background:var(--surface2);color:var(--text-3);border-radius:99px;padding:1px 7px;border:1px solid var(--border);}
     .col-cards{min-height:200px;}
+
+    /* MOBILE TABS */
     .mobile-tabs-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);}
     .tab{flex:1;padding:11px 4px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:500;letter-spacing:0.3px;color:var(--text-3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:color 0.15s,border-color 0.15s;text-align:center;}
     .tab.active{color:var(--green);border-bottom:2px solid var(--green);}
@@ -57,6 +67,8 @@
     .mobile-content{padding:14px 12px;}
     .mobile-panel{display:none;}
     .mobile-panel.active{display:block;}
+
+    /* CARD */
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;margin-bottom:10px;transition:transform 0.1s;}
     .card:active{transform:scale(0.99);}
     .card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
@@ -82,9 +94,11 @@
     .sms-tag{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:11px;font-weight:600;color:var(--green);background:var(--green-dim2);padding:3px 9px;border-radius:99px;border:1px solid rgba(131,247,82,0.15);}
     .sms-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px rgba(131,247,82,0.7);}
     .add-btn-mobile{width:100%;margin-top:4px;padding:11px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:0.3px;border-radius:var(--radius);border:1.5px dashed rgba(131,247,82,0.25);background:var(--green-dim2);color:var(--green);cursor:pointer;}
+
+    /* MODAL BASE */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:flex-end;justify-content:center;}
     .modal-overlay.open{display:flex;}
-    .modal{background:var(--surface);border-radius:20px 20px 0 0;border:1px solid var(--border-strong);border-bottom:none;padding:20px 18px 36px;width:100%;max-width:430px;animation:slideUp 0.22s ease;}
+    .modal{background:var(--surface);border-radius:20px 20px 0 0;border:1px solid var(--border-strong);border-bottom:none;padding:20px 18px 36px;width:100%;max-width:480px;animation:slideUp 0.22s ease;max-height:90vh;overflow-y:auto;}
     @keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
     .modal-handle{width:36px;height:3px;background:var(--border-strong);border-radius:99px;margin:0 auto 18px;}
     .modal-title{font-size:15px;font-weight:700;margin-bottom:18px;}
@@ -93,45 +107,61 @@
     .form-input{width:100%;padding:10px 12px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:500;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);outline:none;transition:border-color 0.15s;}
     .form-input:focus{border-color:rgba(131,247,82,0.4);}
     .form-input option{background:var(--surface2);}
+    textarea.form-input{resize:vertical;min-height:80px;}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
     .modal-submit{width:100%;margin-top:16px;padding:12px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.3px;border-radius:var(--radius-sm);border:none;background:var(--green);color:#0a0a0a;cursor:pointer;}
     .modal-submit:disabled{opacity:0.5;cursor:not-allowed;}
     .modal-cancel{width:100%;margin-top:8px;padding:10px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:transparent;color:var(--text-3);cursor:pointer;}
-    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#0a0a0a;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.3px;padding:10px 20px;border-radius:99px;z-index:200;transition:transform 0.25s ease,opacity 0.25s ease;opacity:0;white-space:nowrap;}
+    .form-hint{font-size:10px;color:var(--text-3);margin-top:4px;}
+
+    /* PRET FORM SPECIAL */
+    .pret-section{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px;border:1px solid var(--border);}
+    .pret-section-title{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+    .usure-row{display:flex;align-items:center;gap:10px;}
+    .usure-label{font-size:12px;color:var(--text-2);font-weight:500;min-width:60px;}
+    .usure-input{flex:1;padding:8px 10px;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:600;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface3);color:var(--text);outline:none;text-align:center;}
+    .usure-unit{font-size:11px;color:var(--text-3);min-width:16px;}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#0a0a0a;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.3px;padding:10px 20px;border-radius:99px;z-index:300;transition:transform 0.25s ease,opacity 0.25s ease;opacity:0;white-space:nowrap;}
     .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
     .toast.error{background:var(--red);color:#fff;}
-    @media(min-width:768px){.mobile-tabs-bar{display:none;}.mobile-content{display:none;}.desktop-board{display:flex;}.add-btn-top{display:block;}.modal-overlay{align-items:center;}.modal{border-radius:16px!important;border-bottom:1px solid var(--border-strong)!important;max-width:420px;}}
+
+    @media(min-width:768px){.mobile-tabs-bar{display:none;}.mobile-content{display:none;}.desktop-board{display:flex;}.add-btn-top{display:block;}.modal-overlay{align-items:center;}.modal{border-radius:16px!important;border-bottom:1px solid var(--border-strong)!important;}}
     @media(max-width:767px){.desktop-board{display:none;}.mobile-tabs-bar{display:flex;}.mobile-content{display:block;}.add-btn-top{display:none;}}
   </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo"><div class="login-dot"></div><div class="login-title">Portail Garage</div></div>
     <div class="login-subtitle">Connectez-vous pour acceder au tableau de bord</div>
     <label class="login-label">Nom d'utilisateur</label>
-    <input class="login-input" type="text" id="login-username" placeholder="ex. garage-stlaurent" autocomplete="username" />
+    <input class="login-input" type="text" id="login-username" placeholder="ex. garage-x" autocomplete="username" />
     <label class="login-label">Mot de passe</label>
     <div class="pwd-wrap">
       <input class="login-input" type="password" id="login-password" placeholder="..." autocomplete="current-password" />
       <button class="pwd-eye" type="button" onclick="togglePwd()">&#128065;</button>
     </div>
     <button class="login-btn" id="login-btn" onclick="doLogin()">Se connecter</button>
-    <div class="login-error" id="login-error">Identifiants incorrects. Veuillez reessayer.</div>
+    <div class="login-error" id="login-error">Identifiants incorrects.</div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="brand-row"><div class="brand-dot"></div><div class="garage-name" id="garage-title">Garage</div></div>
     <div class="topbar-right">
       <div class="today-badge" id="today-badge"></div>
-      <button class="add-btn-top" onclick="openModal()">+ Ajouter un RDV</button>
+      <button class="refresh-badge" onclick="loadInterventions()" title="Rafraichir">&#8635;</button>
+      <button class="add-btn-top" onclick="openAddModal()">+ Ajouter un RDV</button>
       <button class="logout-btn" onclick="doLogout()">Deconnexion</button>
     </div>
   </div>
-  <div id="loading-state" class="loading-state"><div class="spinner"></div><div class="loading-text">Chargement des interventions...</div></div>
+  <div id="loading-state" class="loading-state"><div class="spinner"></div><div class="loading-text">Chargement...</div></div>
   <div class="desktop-board" id="desktop-board" style="display:none;">
     <div class="col"><div class="col-header"><div class="col-dot dot-todo"></div><span class="col-title">A faire</span><span class="col-count" id="d-count-0">0</span></div><div class="col-cards" id="d-col-0"></div></div>
     <div class="col"><div class="col-header"><div class="col-dot dot-progress"></div><span class="col-title">En cours</span><span class="col-count" id="d-count-1">0</span></div><div class="col-cards" id="d-col-1"></div></div>
@@ -149,11 +179,12 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+<!-- MODAL AJOUT RDV -->
+<div class="modal-overlay" id="modal-add" onclick="closeModalOutside(event,'modal-add')">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Nouveau rendez-vous</div>
-    <div class="form-group"><label class="form-label">Vehicule (plaque)</label><input class="form-input" type="text" placeholder="ex. AAA 111" id="i-plaque" /></div>
+    <div class="form-group"><label class="form-label">Vehicule (plaque)</label><input class="form-input" type="text" placeholder="ex. AAA 111" id="i-plaque" /><div class="form-hint">La plaque doit exister dans Baserow</div></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="i-date" /></div>
       <div class="form-group"><label class="form-label">Heure</label><input class="form-input" type="time" id="i-time" value="09:00" /></div>
@@ -163,8 +194,56 @@
       <div class="form-group"><label class="form-label">Technicien</label><input class="form-input" type="text" placeholder="ex. Luc B." id="i-tech" /></div>
     </div>
     <div class="form-group"><label class="form-label">Travaux a faire</label><input class="form-input" type="text" placeholder="ex. Vidange d'huile" id="i-travaux" /></div>
-    <button class="modal-submit" id="modal-submit-btn" onclick="addRdv()">Ajouter le RDV</button>
-    <button class="modal-cancel" onclick="closeModal()">Annuler</button>
+    <button class="modal-submit" id="add-submit-btn" onclick="addRdv()">Ajouter le RDV</button>
+    <button class="modal-cancel" onclick="closeModal('modal-add')">Annuler</button>
+  </div>
+</div>
+
+<!-- MODAL FORMULAIRE PRET -->
+<div class="modal-overlay" id="modal-pret" onclick="closeModalOutside(event,'modal-pret')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Completer l'intervention</div>
+    <input type="hidden" id="pret-row-id" />
+    <input type="hidden" id="pret-card-id" />
+    <input type="hidden" id="pret-from-col" />
+
+    <div class="pret-section">
+      <div class="pret-section-title">Kilometrage</div>
+      <div class="form-group" style="margin-bottom:0;">
+        <div class="usure-row">
+          <span class="usure-label">KM actuel</span>
+          <input class="usure-input" type="number" id="pret-km" placeholder="ex. 125000" min="0" />
+          <span class="usure-unit">km</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pret-section">
+      <div class="pret-section-title">Usure</div>
+      <div class="form-group">
+        <div class="usure-row" style="margin-bottom:10px;">
+          <span class="usure-label">Pneus</span>
+          <input class="usure-input" type="number" id="pret-pneus" placeholder="80" min="0" max="100" />
+          <span class="usure-unit">%</span>
+        </div>
+        <div class="usure-row">
+          <span class="usure-label">Freins</span>
+          <input class="usure-input" type="number" id="pret-freins" placeholder="70" min="0" max="100" />
+          <span class="usure-unit">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pret-section">
+      <div class="pret-section-title">Recommandations</div>
+      <div class="form-group" style="margin-bottom:0;">
+        <textarea class="form-input" id="pret-reco" placeholder="ex. Rotation des pneus recommandee dans 5000 km..."></textarea>
+      </div>
+    </div>
+
+    <button class="modal-submit" id="pret-submit-btn" onclick="submitPret()">Marquer comme pret et notifier</button>
+    <button class="modal-cancel" onclick="closeModal('modal-pret')">Annuler</button>
   </div>
 </div>
 
@@ -172,10 +251,11 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
 
   let SESSION = null;
+  let refreshTimer = null;
 
   const MOIS=['JAN','FEV','MAR','AVR','MAI','JUN','JUL','AOU','SEP','OCT','NOV','DEC'];
   const now = new Date();
@@ -183,30 +263,62 @@
   document.getElementById('today-badge').textContent = now.getDate()+' '+MOIS[now.getMonth()]+' '+now.getFullYear();
   document.getElementById('i-date').value = todayISO;
 
-  function showToast(msg,isError){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(isError?' error':'');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+  // UTILS
+  function showToast(msg,isError){
+    const t=document.getElementById('toast');t.textContent=msg;
+    t.className='toast'+(isError?' error':'');t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2800);
+  }
   function togglePwd(){const i=document.getElementById('login-password');i.type=i.type==='password'?'text':'password';}
-  function switchTab(i){document.querySelectorAll('.tab').forEach((t,x)=>t.classList.toggle('active',x===i));document.querySelectorAll('.mobile-panel').forEach((p,x)=>p.classList.toggle('active',x===i));}
+  function switchTab(i){
+    document.querySelectorAll('.tab').forEach((t,x)=>t.classList.toggle('active',x===i));
+    document.querySelectorAll('.mobile-panel').forEach((p,x)=>p.classList.toggle('active',x===i));
+  }
   function mCount(i,d){const e=document.getElementById('m-count-'+i);e.textContent=Math.max(0,parseInt(e.textContent)+d);}
   function dCount(i,d){const e=document.getElementById('d-count-'+i);e.textContent=Math.max(0,parseInt(e.textContent)+d);}
   function updateCount(i,d){mCount(i,d);dCount(i,d);}
+  function openModal(id){document.getElementById(id).classList.add('open');}
+  function closeModal(id){document.getElementById(id).classList.remove('open');}
+  function closeModalOutside(e,id){if(e.target===document.getElementById(id))closeModal(id);}
+  function openAddModal(){openModal('modal-add');}
 
+  // ETAT MAPPING — valeurs exactes Baserow
   function etatToCol(etat){
     if(!etat) return 0;
-    const raw = (typeof etat==='object' && etat!==null) ? (etat.value||'') : String(etat);
-    const e = raw.toLowerCase().trim();
+    const raw=(typeof etat==='object'&&etat!==null)?(etat.value||''):String(etat);
+    const e=raw.toLowerCase().trim();
     if(e.includes('cours')) return 1;
     if(e.includes('pr')) return 2;
     return 0;
   }
-  function colToEtat(col){return col===0?'Pas commencer':col===1?'En cours':'Pret';}
+  // Valeurs EXACTES du Single Select dans Baserow
+  function colToEtat(col){
+    if(col===1) return 'En cours';
+    if(col===2) return 'Pret';
+    return 'Pas commencer';
+  }
 
+  // PARSE DATE — affiche heure locale sans decalage UTC
+  function parseTime(dateRaw){
+    if(!dateRaw) return '';
+    // Baserow retourne "2026-03-21T08:30:00Z" — on affiche l'heure telle quelle sans conversion
+    const parts = dateRaw.split('T');
+    if(parts.length < 2) return '';
+    const timePart = parts[1].substring(0,5); // "08:30"
+    return timePart.replace(':','H'); // "08H30"
+  }
+
+  // SESSION
   function showApp(){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
     document.getElementById('garage-title').textContent=SESSION.garageName;
   }
 
-  try{const s=localStorage.getItem('upflow_s');if(s){SESSION=JSON.parse(s);showApp();loadInterventions();}}catch(e){localStorage.removeItem('upflow_s');}
+  try{
+    const s=localStorage.getItem('upflow_s');
+    if(s){SESSION=JSON.parse(s);showApp();loadInterventions();}
+  }catch(e){localStorage.removeItem('upflow_s');}
 
   document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
   document.getElementById('login-username').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
@@ -224,7 +336,13 @@
       if(!data.results||data.results.length===0) throw new Error('not_found');
       const garage=data.results[0];
       if(garage.Password!==password) throw new Error('wrong_password');
-      SESSION={garageName:garage['Nom du garage'],token:garage.Token_API,tableInterventions:garage.Table_Interventions_ID,tableVehicules:garage.Table_Vehicules_ID,tableClient:garage.Table_Client_ID};
+      SESSION={
+        garageName:garage['Nom du garage'],
+        token:garage.Token_API,
+        tableInterventions:garage.Table_Interventions_ID,
+        tableVehicules:garage.Table_Vehicules_ID,
+        tableClient:garage.Table_Client_ID
+      };
       localStorage.setItem('upflow_s',JSON.stringify(SESSION));
       showApp();
       await loadInterventions();
@@ -236,10 +354,13 @@
 
   function doLogout(){
     SESSION=null;localStorage.removeItem('upflow_s');
+    if(refreshTimer)clearInterval(refreshTimer);
     document.getElementById('app').style.display='none';
     document.getElementById('login-screen').style.display='flex';
-    document.getElementById('login-username').value='';document.getElementById('login-password').value='';
-    document.getElementById('login-btn').disabled=false;document.getElementById('login-btn').textContent='Se connecter';
+    document.getElementById('login-username').value='';
+    document.getElementById('login-password').value='';
+    document.getElementById('login-btn').disabled=false;
+    document.getElementById('login-btn').textContent='Se connecter';
     [0,1,2].forEach(i=>{document.getElementById('m-count-'+i).textContent='0';document.getElementById('d-count-'+i).textContent='0';});
   }
 
@@ -253,31 +374,49 @@
     try{
       const res=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/?user_field_names=true&size=200`,{headers:{'Authorization':'Token '+SESSION.token}});
       const data=await res.json();
-      console.log('Interventions loaded:', data);
       if(data.results) data.results.forEach(row=>renderCard(row));
-      const addBtnM=document.createElement('button');addBtnM.className='add-btn-mobile';addBtnM.textContent='+ Ajouter un RDV';addBtnM.onclick=openModal;
+      const addBtnM=document.createElement('button');
+      addBtnM.className='add-btn-mobile';addBtnM.textContent='+ Ajouter un RDV';addBtnM.onclick=openAddModal;
       document.getElementById('m-panel-0').appendChild(addBtnM);
       document.getElementById('loading-state').style.display='none';
       if(window.innerWidth>=768){document.getElementById('desktop-board').style.display='flex';}
       else{document.getElementById('mobile-tabs').style.display='flex';document.getElementById('mobile-content').style.display='block';}
+
+      // AUTO-REFRESH toutes les 2 minutes
+      if(refreshTimer) clearInterval(refreshTimer);
+      refreshTimer = setInterval(()=>{
+        if(SESSION) loadInterventions();
+      }, 120000);
+
     }catch(e){
       console.error('Load error:',e);
       document.getElementById('loading-state').style.display='none';
-      showToast('Erreur de chargement: '+e.message,true);
+      showToast('Erreur de chargement',true);
     }
   }
 
   function renderCard(row){
-    const etat=row['Etat']||row['etat']||row['État']||row['état']||'';
+    const etat=row['Etat']||row['etat']||row['Etat']||row['etat']||'';
     const col=etatToCol(etat);
+
+    // Vehicule — lien Baserow
     let vehicleName='--';
     const v=row['Vehicules']||row['Véhicules'];
-    if(v){if(typeof v==='string')vehicleName=v;else if(Array.isArray(v)&&v[0])vehicleName=v[0].value||String(v[0]);else if(v.value)vehicleName=v.value;}
-    const travaux=row['Travaux a faire']||row['Travaux à faire']||'--';
+    if(v){
+      if(typeof v==='string' && v.trim()) vehicleName=v;
+      else if(Array.isArray(v) && v.length>0){
+        const first=v[0];
+        if(typeof first==='string') vehicleName=first;
+        else if(first && first.value) vehicleName=first.value;
+        else if(first && first.display_name) vehicleName=first.display_name;
+      }
+      else if(v && typeof v==='object' && v.value) vehicleName=v.value;
+    }
+
+    const travaux=row['Travaux a faire']||row['Travaux \u00e0 faire']||'--';
     const tech=row['Technicien']||'--';
-    const porte=row['Numero de porte']||row['Numéro de porte']||'?';
-    const dateRaw=row['Date']||'';
-    const timeStr=dateRaw?(dateRaw.split('T')[1]||'').substring(0,5).replace(':','H'):'';
+    const porte=row['Numero de porte']||row['Num\u00e9ro de porte']||'?';
+    const timeStr=parseTime(row['Date']||'');
     const rowId=row['id'];
     const cardId='card-'+rowId;
 
@@ -288,7 +427,9 @@
     const badgeLabel=col===0?'A faire':col===1?'En cours':'Pret';
     const metaRow=col<2?`<div class="meta-row"><span class="door-num">${porte}</span><span class="vehicle-name">${vehicleName}</span></div>`:`<div class="vehicle-name" style="margin-bottom:10px;">${vehicleName}</div>`;
     const smsTag=col===2?`<div class="sms-tag"><span class="sms-dot"></span>SMS envoye au client</div>`:'';
-    const actionBtn=col<2?`<button class="action-btn" onclick="askConfirm(this,'${cardId}',${col},${rowId})">${col===0?"Demarrer l'entretien":'Marquer comme pret'}</button>`:'';
+    let actionBtn='';
+    if(col===0) actionBtn=`<button class="action-btn" onclick="askConfirm(this,'${cardId}',0,${rowId})">Demarrer l'entretien</button>`;
+    else if(col===1) actionBtn=`<button class="action-btn" onclick="openPretForm('${cardId}',1,${rowId})">Marquer comme pret</button>`;
 
     card.innerHTML=`<div class="card-head"><span class="client-name">${travaux}</span>${timeStr?`<span class="rdv-time">${timeStr}</span>`:''}</div>${metaRow}<div class="divider"></div><div class="card-foot"><span class="service-badge ${badgeClass}">${badgeLabel}</span><span class="tech-name">${tech}</span></div>${smsTag}${actionBtn}`;
 
@@ -296,13 +437,18 @@
     const dCol=document.getElementById('d-col-'+col);
     if(col===2){mPanel.appendChild(card);}
     else{const ab=mPanel.querySelector('.add-btn-mobile');if(ab)mPanel.insertBefore(card,ab);else mPanel.appendChild(card);}
+
     const clone=card.cloneNode(true);clone.id='d-'+cardId;clone.dataset.rowId=rowId;
-    const cloneBtn=clone.querySelector('.action-btn');
-    if(cloneBtn)cloneBtn.setAttribute('onclick',`askConfirm(this,'d-${cardId}',${col},${rowId})`);
+    const cloneBtn0=clone.querySelector('.action-btn');
+    if(cloneBtn0){
+      if(col===0) cloneBtn0.setAttribute('onclick',`askConfirm(this,'d-${cardId}',0,${rowId})`);
+      else if(col===1) cloneBtn0.setAttribute('onclick',`openPretForm('d-${cardId}',1,${rowId})`);
+    }
     dCol.appendChild(clone);
     updateCount(col,1);
   }
 
+  // CONFIRM (pour A faire -> En cours seulement)
   const pendingTimers={};
   function askConfirm(btn,cardId,currentCol,rowId){
     const card=document.getElementById(cardId);if(!card)return;
@@ -310,15 +456,13 @@
     const undoRow=document.createElement('div');undoRow.className='undo-row';undoRow.id='undo-'+cardId;
     const bar=document.createElement('div');bar.className='countdown-bar';
     const fill=document.createElement('div');fill.className='countdown-fill';bar.appendChild(fill);
-    const nextCol=currentCol+1;
-    const label=currentCol===0?'Demarrer ?':'Marquer pret ?';
-    undoRow.innerHTML=`<button class="undo-cancel" onclick="cancelAction('${cardId}')">Annuler</button><button class="undo-confirm" onclick="confirmAction('${cardId}',${currentCol},${nextCol},${rowId})">${label}</button>`;
+    undoRow.innerHTML=`<button class="undo-cancel" onclick="cancelAction('${cardId}')">Annuler</button><button class="undo-confirm" onclick="confirmStart('${cardId}',${rowId})">Demarrer ?</button>`;
     card.appendChild(undoRow);card.appendChild(bar);
     const DURATION=4000;const start=Date.now();
     const interval=setInterval(()=>{
       const pct=Math.max(0,100-((Date.now()-start)/DURATION)*100);
       fill.style.width=pct+'%';
-      if(Date.now()-start>=DURATION){clearInterval(interval);confirmAction(cardId,currentCol,nextCol,rowId);}
+      if(Date.now()-start>=DURATION){clearInterval(interval);confirmStart(cardId,rowId);}
     },50);
     pendingTimers[cardId]=interval;
   }
@@ -326,44 +470,110 @@
   function cancelAction(cardId){
     clearInterval(pendingTimers[cardId]);delete pendingTimers[cardId];
     const card=document.getElementById(cardId);
-    const undoRow=document.getElementById('undo-'+cardId);const bar=card&&card.querySelector('.countdown-bar');
+    const undoRow=document.getElementById('undo-'+cardId);
+    const bar=card&&card.querySelector('.countdown-bar');
     if(undoRow)undoRow.remove();if(bar)bar.remove();
     const btn=card&&card.querySelector('.action-btn');if(btn)btn.style.display='';
     showToast('Action annulee');
   }
 
-  async function confirmAction(cardId,fromCol,toCol,rowId){
+  async function confirmStart(cardId,rowId){
     clearInterval(pendingTimers[cardId]);delete pendingTimers[cardId];
     const card=document.getElementById(cardId);if(!card)return;
-    const undoRow=document.getElementById('undo-'+cardId);const bar=card.querySelector('.countdown-bar');
+    const undoRow=document.getElementById('undo-'+cardId);
+    const bar=card.querySelector('.countdown-bar');
     if(undoRow)undoRow.remove();if(bar)bar.remove();
-    const newEtat=colToEtat(toCol);
+
+    // UPDATE BASEROW — En cours
     try{
-      await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/${rowId}/?user_field_names=true`,{method:'PATCH',headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},body:JSON.stringify({'Etat':newEtat})});
+      await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/${rowId}/?user_field_names=true`,{
+        method:'PATCH',
+        headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},
+        body:JSON.stringify({'Etat':'En cours'})
+      });
     }catch(e){showToast('Erreur mise a jour',true);return;}
+
+    // Update UI — les deux cartes (mobile + desktop)
     [cardId,'d-'+cardId].forEach(id=>{
       const c=document.getElementById(id);if(!c)return;
-      const badge=c.querySelector('.service-badge');const actionBtn=c.querySelector('.action-btn');
-      if(toCol===1){
-        if(badge){badge.className='service-badge badge-progress';badge.textContent='En cours';}
-        if(actionBtn){actionBtn.textContent='Marquer comme pret';actionBtn.style.display='';actionBtn.setAttribute('onclick',`askConfirm(this,'${id}',1,${rowId})`);}
-        document.getElementById(id.startsWith('d-')?'d-col-1':'m-panel-1').appendChild(c);
-      }else if(toCol===2){
-        if(badge){badge.className='service-badge badge-ready';badge.textContent='Pret';}
-        if(actionBtn)actionBtn.remove();
-        const mr=c.querySelector('.meta-row');if(mr)mr.remove();
-        if(!c.querySelector('.sms-tag')){const s=document.createElement('div');s.className='sms-tag';s.innerHTML='<span class="sms-dot"></span>SMS envoye';c.appendChild(s);}
-        document.getElementById(id.startsWith('d-')?'d-col-2':'m-panel-2').appendChild(c);
+      const badge=c.querySelector('.service-badge');
+      const btn=c.querySelector('.action-btn');
+      if(badge){badge.className='service-badge badge-progress';badge.textContent='En cours';}
+      if(btn){
+        btn.textContent='Marquer comme pret';btn.style.display='';
+        btn.setAttribute('onclick',`openPretForm('${id}',1,${rowId})`);
       }
+      const target=id.startsWith('d-')?document.getElementById('d-col-1'):document.getElementById('m-panel-1');
+      target.appendChild(c);
     });
-    updateCount(fromCol,-1);updateCount(toCol,1);
-    showToast(toCol===1?'Entretien demarre':'Client notifie par SMS');
+    updateCount(0,-1);updateCount(1,1);
+    showToast('Entretien demarre');
   }
 
-  function openModal(){document.getElementById('modal').classList.add('open');}
-  function closeModal(){document.getElementById('modal').classList.remove('open');}
-  function closeModalOutside(e){if(e.target===document.getElementById('modal'))closeModal();}
+  // FORMULAIRE PRET
+  function openPretForm(cardId,fromCol,rowId){
+    document.getElementById('pret-row-id').value=rowId;
+    document.getElementById('pret-card-id').value=cardId;
+    document.getElementById('pret-from-col').value=fromCol;
+    document.getElementById('pret-km').value='';
+    document.getElementById('pret-pneus').value='';
+    document.getElementById('pret-freins').value='';
+    document.getElementById('pret-reco').value='';
+    openModal('modal-pret');
+  }
 
+  async function submitPret(){
+    const rowId=document.getElementById('pret-row-id').value;
+    const cardId=document.getElementById('pret-card-id').value;
+    const fromCol=parseInt(document.getElementById('pret-from-col').value);
+    const km=document.getElementById('pret-km').value;
+    const pneus=document.getElementById('pret-pneus').value;
+    const freins=document.getElementById('pret-freins').value;
+    const reco=document.getElementById('pret-reco').value.trim();
+
+    const submitBtn=document.getElementById('pret-submit-btn');
+    submitBtn.disabled=true;submitBtn.textContent='Enregistrement...';
+
+    const body={'Etat':'Pret'};
+    if(km) body['KM actuel']=parseInt(km);
+    if(pneus) body['Usure Pneus (%)'] = parseInt(pneus);
+    if(freins) body['Usure Freins (%)'] = parseInt(freins);
+    if(reco) body['Recommandation']=reco;
+
+    try{
+      await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/${rowId}/?user_field_names=true`,{
+        method:'PATCH',
+        headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+
+      // Update UI
+      [cardId,'d-'+cardId].forEach(id=>{
+        const c=document.getElementById(id);if(!c)return;
+        const badge=c.querySelector('.service-badge');
+        const btn=c.querySelector('.action-btn');
+        const mr=c.querySelector('.meta-row');
+        if(badge){badge.className='service-badge badge-ready';badge.textContent='Pret';}
+        if(btn)btn.remove();
+        if(mr)mr.remove();
+        if(!c.querySelector('.sms-tag')){
+          const s=document.createElement('div');s.className='sms-tag';
+          s.innerHTML='<span class="sms-dot"></span>SMS envoye au client';c.appendChild(s);
+        }
+        const target=id.startsWith('d-')?document.getElementById('d-col-2'):document.getElementById('m-panel-2');
+        target.appendChild(c);
+      });
+      updateCount(fromCol,-1);updateCount(2,1);
+      closeModal('modal-pret');
+      showToast('Client notifie par SMS');
+    }catch(e){
+      showToast('Erreur lors de la mise a jour',true);
+    }finally{
+      submitBtn.disabled=false;submitBtn.textContent='Marquer comme pret et notifier';
+    }
+  }
+
+  // AJOUT RDV
   async function addRdv(){
     const plaque=document.getElementById('i-plaque').value.trim();
     const date=document.getElementById('i-date').value;
@@ -372,7 +582,7 @@
     const tech=document.getElementById('i-tech').value.trim();
     const travaux=document.getElementById('i-travaux').value.trim();
     if(!plaque||!travaux){showToast('Remplis les champs obligatoires',true);return;}
-    const submitBtn=document.getElementById('modal-submit-btn');submitBtn.disabled=true;submitBtn.textContent='Ajout en cours...';
+    const submitBtn=document.getElementById('add-submit-btn');submitBtn.disabled=true;submitBtn.textContent='Ajout en cours...';
     try{
       const vRes=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableVehicules}/?user_field_names=true&filter__Plaque__equal=${encodeURIComponent(plaque)}`,{headers:{'Authorization':'Token '+SESSION.token}});
       const vData=await vRes.json();
@@ -381,9 +591,15 @@
       if(tech)body['Technicien']=tech;
       if(date&&time)body['Date']=`${date}T${time}:00Z`;
       if(vehiculeId)body['Vehicules']=[vehiculeId];
-      const res=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/?user_field_names=true`,{method:'POST',headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const res=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/?user_field_names=true`,{
+        method:'POST',
+        headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
       const newRow=await res.json();
-      renderCard(newRow);closeModal();showToast('RDV ajoute');
+      renderCard(newRow);
+      closeModal('modal-add');
+      showToast('RDV ajoute');
       ['i-plaque','i-tech','i-travaux'].forEach(x=>document.getElementById(x).value='');
       document.getElementById('i-time').value='09:00';document.getElementById('i-date').value=todayISO;
     }catch(e){showToast('Erreur lors ajout',true);}
