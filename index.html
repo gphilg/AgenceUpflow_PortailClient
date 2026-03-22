@@ -228,7 +228,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -475,6 +475,8 @@
     const card = document.createElement('div');
     card.className='card';card.id=cardId;card.dataset.rowId=rowId;
     if(vehiculeRowId) card.dataset.vehiculeId=vehiculeRowId;
+    const dateRawForCard = getField(row,'Date','date') || '';
+    if(dateRawForCard) card.dataset.date=dateRawForCard;
 
     const badgeClass = col===0?'badge-todo':col===1?'badge-progress':'badge-ready';
     const badgeLabel = col===0?'A faire':col===1?'En cours':'Pret';
@@ -502,16 +504,18 @@
     if(col===0){
       actionBtn=`<button class="action-btn" onclick="askConfirm(this,'${cardId}',0,${rowId})">Demarrer l'entretien</button>`;
       // Bouton No Show si RDV depasse de 15+ minutes
-      if(timeStr){
-        try{
-          const rdvDate = new Date(getField(row,'Date','date')||'');
-          const now = new Date();
-          const diffMin = (now - rdvDate) / 60000;
+      try{
+        const dateRawNS = getField(row,'Date','date') || '';
+        if(dateRawNS){
+          const rdvDate = new Date(dateRawNS);
+          const nowNS = new Date();
+          const diffMin = (nowNS - rdvDate) / 60000;
+          console.log('NoShow check:', diffMin, 'min for', travaux);
           if(diffMin >= 15){
             noShowBtn = `<button class="noshow-btn" onclick="confirmNoShow('${cardId}',${rowId})">No Show?</button>`;
           }
-        }catch(e){}
-      }
+        }
+      }catch(e){ console.log('noshow err', e); }
     }
     else if(col===1) actionBtn=`<button class="action-btn" onclick="openPretForm('${cardId}',1,${rowId})">Marquer comme pret</button>`;
 
