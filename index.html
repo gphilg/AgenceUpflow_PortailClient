@@ -187,6 +187,7 @@
     <input type="hidden" id="pret-row-id" />
     <input type="hidden" id="pret-card-id" />
     <input type="hidden" id="pret-from-col" />
+    <input type="hidden" id="pret-vehicule-id" />
     <div class="pret-section">
       <div class="pret-section-title">Kilometrage</div>
       <div class="usure-row">
@@ -221,7 +222,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -396,8 +397,13 @@
     const rowId = row['id'];
     const cardId = 'card-'+rowId;
 
+    // Extraire l'ID du vehicule lie pour le PATCH KM
+    let vehiculeRowId = null;
+    if(vRaw && Array.isArray(vRaw) && vRaw[0] && vRaw[0].id) vehiculeRowId = vRaw[0].id;
+
     const card = document.createElement('div');
     card.className='card';card.id=cardId;card.dataset.rowId=rowId;
+    if(vehiculeRowId) card.dataset.vehiculeId=vehiculeRowId;
 
     const badgeClass = col===0?'badge-todo':col===1?'badge-progress':'badge-ready';
     const badgeLabel = col===0?'A faire':col===1?'En cours':'Pret';
@@ -493,6 +499,10 @@
     document.getElementById('pret-row-id').value=rowId;
     document.getElementById('pret-card-id').value=cardId;
     document.getElementById('pret-from-col').value=fromCol;
+    // Recuperer l'ID du vehicule depuis la carte
+    const card=document.getElementById(cardId);
+    const vehiculeId=card?card.dataset.vehiculeId||'':'';
+    document.getElementById('pret-vehicule-id').value=vehiculeId;
     ['pret-km','pret-pneus','pret-freins','pret-reco'].forEach(id=>document.getElementById(id).value='');
     openModal('modal-pret');
   }
@@ -508,23 +518,38 @@
     const submitBtn=document.getElementById('pret-submit-btn');
     submitBtn.disabled=true;submitBtn.textContent='Enregistrement...';
 
-    // Body avec noms de champs exacts
-    const body={};
-    body[F.etat] = ETAT_VALUES[2];
-    if(km) body[F.km]=parseInt(km);
-    if(pneus) body[F.pneus]=parseInt(pneus);
-    if(freins) body[F.freins]=parseInt(freins);
-    if(reco) body[F.reco]=reco;
+    const vehiculeId=document.getElementById('pret-vehicule-id').value;
 
-    console.log('PATCH body:', JSON.stringify(body));
+    // PATCH 1 — Interventions : etat + usure + recommandation + KM (historique)
+    const bodyIntervention={};
+    bodyIntervention[F.etat] = ETAT_VALUES[2];
+    if(pneus) bodyIntervention[F.pneus]=parseInt(pneus);
+    if(freins) bodyIntervention[F.freins]=parseInt(freins);
+    if(reco) bodyIntervention[F.reco]=reco;
+    if(km) bodyIntervention['KM actuel']=parseInt(km);
+
+    // PATCH 2 — Vehicules : KM actuel (toujours a jour)
+    const bodyVehicule={};
+    if(km && vehiculeId) bodyVehicule['KM actuel']=parseInt(km);
 
     try{
+      // PATCH Interventions
       const r=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/${rowId}/?user_field_names=true`,{
         method:'PATCH',headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},
-        body:JSON.stringify(body)
+        body:JSON.stringify(bodyIntervention)
       });
       const resp=await r.json();
-      console.log('PATCH response:', resp);
+      console.log('PATCH intervention:', resp);
+
+      // PATCH Vehicules si KM fourni
+      if(km && vehiculeId){
+        const rv=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableVehicules}/${vehiculeId}/?user_field_names=true`,{
+          method:'PATCH',headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},
+          body:JSON.stringify(bodyVehicule)
+        });
+        const respv=await rv.json();
+        console.log('PATCH vehicule KM:', respv);
+      }
 
       [cardId,'d-'+cardId].forEach(id=>{
         const c=document.getElementById(id);if(!c)return;
