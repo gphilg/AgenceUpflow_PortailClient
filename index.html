@@ -222,7 +222,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -351,14 +351,25 @@
     ['d-col-0','d-col-1','d-col-2','m-panel-0','m-panel-1','m-panel-2'].forEach(id=>document.getElementById(id).innerHTML='');
     [0,1,2].forEach(i=>{document.getElementById('m-count-'+i).textContent='0';document.getElementById('d-count-'+i).textContent='0';});
     try{
-      // Filtre: uniquement les interventions d'aujourd'hui
-      const todayStart = todayISO + 'T00:00:00Z';
-      const todayEnd   = todayISO + 'T23:59:59Z';
-      const url = `${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/?user_field_names=true&size=200&filter__Date__date_equals=${todayISO}`;
-      const res=await fetch(url,{headers:{'Authorization':'Token '+SESSION.token}});
+      // Charge toutes les interventions, filtre par date cote JS
+      const res=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/?user_field_names=true&size=200`,{headers:{'Authorization':'Token '+SESSION.token}});
       const data=await res.json();
       console.log('Sample row:', data.results&&data.results[0]);
-      if(data.results) data.results.forEach(row=>renderCard(row));
+      // Filtre cote JS: garde seulement les interventions du jour ET celles En cours/Pret (peu importe la date)
+      const filtered = data.results ? data.results.filter(row => {
+        const etatRaw = row['État'] || row['Etat'] || '';
+        const etatVal = (typeof etatRaw === 'object' && etatRaw) ? (etatRaw.value||'') : String(etatRaw||'');
+        const isEnCours = etatVal.toLowerCase().includes('cours');
+        const isPret = etatVal.toLowerCase().includes('pr');
+        // Interventions en cours ou pret: toujours afficher
+        if(isEnCours || isPret) return true;
+        // Interventions a faire: seulement si date = aujourd'hui
+        const dateRaw = row['Date'] || '';
+        if(!dateRaw) return false;
+        const dateOnly = dateRaw.split('T')[0];
+        return dateOnly === todayISO;
+      }) : [];
+      filtered.forEach(row=>renderCard(row));
       const addBtnM=document.createElement('button');addBtnM.className='add-btn-mobile';addBtnM.textContent='+ Ajouter un RDV';addBtnM.onclick=()=>openModal('modal-add');
       document.getElementById('m-panel-0').appendChild(addBtnM);
       document.getElementById('loading-state').style.display='none';
