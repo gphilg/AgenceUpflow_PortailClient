@@ -226,7 +226,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -300,23 +300,39 @@
   }
 
   function extractVehicle(v, rowData){
-    // Essaie de construire "Marque Modele" depuis les champs directs de la ligne
-    const marque = rowData ? (getField(rowData,'Marque','marque')||'') : '';
-    const modele = rowData ? (getField(rowData,'Modele','Modèle','modele')||'') : '';
-    if(marque && modele) return {name: marque+' '+modele, plaque:''};
-    if(modele) return {name: modele, plaque:''};
+    // Lookup fields sur la ligne Intervention (Marque, Modele via champ lie Vehicules)
+    const marque = rowData ? extractLookup(getField(rowData,'Marque','marque')) : '';
+    const modele = rowData ? extractLookup(getField(rowData,'Modèle','Modele','modele')) : '';
+    if(marque && modele) return {name: marque+' '+modele};
+    if(marque) return {name: marque};
+    if(modele) return {name: modele};
 
-    // Sinon depuis le champ lié Véhicules
-    if(!v) return {name:'--',plaque:''};
-    if(typeof v==='string'&&v.trim()) return {name:v,plaque:''};
+    // Fallback: champ lie Vehicules (retourne juste le champ primaire = Modele)
+    if(!v) return {name:'--'};
+    if(typeof v==='string'&&v.trim()) return {name:v};
     if(Array.isArray(v)&&v.length>0){
       const first=v[0];
-      if(typeof first==='string') return {name:first,plaque:''};
-      if(first&&first.value) return {name:first.value,plaque:''};
-      if(first&&first.display_name) return {name:first.display_name,plaque:''};
+      if(typeof first==='string') return {name:first};
+      if(first&&first.value) return {name:first.value};
+      if(first&&first.display_name) return {name:first.display_name};
     }
-    if(typeof v==='object'&&v.value) return {name:v.value,plaque:''};
-    return {name:'--',plaque:''};
+    if(typeof v==='object'&&v.value) return {name:v.value};
+    return {name:'--'};
+  }
+
+  // Extrait la valeur d'un champ lookup Baserow (retourne array ou objet)
+  function extractLookup(val){
+    if(!val) return '';
+    if(typeof val==='string') return val.trim();
+    if(typeof val==='number') return String(val);
+    if(Array.isArray(val) && val.length>0){
+      const first = val[0];
+      if(typeof first==='string') return first;
+      if(first && first.value !== undefined) return String(first.value);
+      return String(first);
+    }
+    if(typeof val==='object' && val.value !== undefined) return String(val.value);
+    return '';
   }
 
   function showApp(){
@@ -434,18 +450,14 @@
     const vRaw = getField(row, F.vehicules, 'Vehicules', 'vehicules');
     const {name: vehicleName} = extractVehicle(vRaw, row);
 
-    // Plaque directe sur la ligne intervention si elle existe
-    const plaqueDirect = getField(row, 'Plaque', 'plaque');
-    let plaque = plaqueDirect || '';
+    // Plaque — depuis le champ lookup sur Interventions
+    const plaque = extractLookup(getField(row, 'Plaque', 'plaque')) || '';
 
-    // Nom du client — depuis le champ Client lié au vehicule (si disponible sur la ligne)
-    let clientName = '';
-    const clientRaw = getField(row, 'Client', 'client');
-    if(clientRaw){
-      if(typeof clientRaw === 'string') clientName = clientRaw;
-      else if(Array.isArray(clientRaw) && clientRaw[0]) clientName = clientRaw[0].value || clientRaw[0].display_name || '';
-      else if(clientRaw.value) clientName = clientRaw.value;
-    }
+    // Nom du client — depuis le champ lookup Client sur Interventions
+    const clientName = extractLookup(getField(row, 'Client', 'client')) || '';
+
+    // Modele — lookup depuis Vehicules (champ primaire)
+    // Note: deja gere dans extractVehicle via rowData
 
     const travaux = getField(row, F.travaux, 'Travaux a faire', 'travaux') || '--';
     const tech = getField(row, 'Technicien', 'technicien') || '--';
