@@ -85,6 +85,8 @@
     .client-line{font-size:11px;color:var(--text-3);font-weight:500;margin-top:3px;margin-bottom:6px;padding-left:2px;}
     .sms-tag{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:11px;font-weight:600;color:var(--green);background:var(--green-dim2);padding:3px 9px;border-radius:99px;border:1px solid rgba(131,247,82,0.15);}
     .sms-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px rgba(131,247,82,0.7);}
+    .noshow-btn{width:100%;margin-top:6px;padding:8px 12px;font-size:11px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.5px;border-radius:var(--radius-sm);border:1px solid rgba(255,77,77,0.3);background:rgba(255,77,77,0.06);color:#ff4d4d;cursor:pointer;text-transform:uppercase;}
+    .noshow-btn:active{background:rgba(255,77,77,0.12);}
     .add-btn-mobile{width:100%;margin-top:4px;padding:11px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:0.3px;border-radius:var(--radius);border:1.5px dashed rgba(131,247,82,0.25);background:var(--green-dim2);color:var(--green);cursor:pointer;}
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:flex-end;justify-content:center;}
     .modal-overlay.open{display:flex;}
@@ -226,7 +228,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -496,7 +498,21 @@
 
     const smsTag = col===2 ? `<div class="sms-tag"><span class="sms-dot"></span>SMS envoye au client</div>` : '';
     let actionBtn = '';
-    if(col===0) actionBtn=`<button class="action-btn" onclick="askConfirm(this,'${cardId}',0,${rowId})">Demarrer l'entretien</button>`;
+    let noShowBtn = '';
+    if(col===0){
+      actionBtn=`<button class="action-btn" onclick="askConfirm(this,'${cardId}',0,${rowId})">Demarrer l'entretien</button>`;
+      // Bouton No Show si RDV depasse de 15+ minutes
+      if(timeStr){
+        try{
+          const rdvDate = new Date(getField(row,'Date','date')||'');
+          const now = new Date();
+          const diffMin = (now - rdvDate) / 60000;
+          if(diffMin >= 15){
+            noShowBtn = `<button class="noshow-btn" onclick="confirmNoShow('${cardId}',${rowId})">No Show?</button>`;
+          }
+        }catch(e){}
+      }
+    }
     else if(col===1) actionBtn=`<button class="action-btn" onclick="openPretForm('${cardId}',1,${rowId})">Marquer comme pret</button>`;
 
     card.innerHTML=`
@@ -573,6 +589,31 @@
     });
     updateCount(0,-1);updateCount(1,1);
     showToast('Entretien demarre');
+  }
+
+  // NO SHOW
+  async function confirmNoShow(cardId, rowId){
+    if(!confirm('Marquer ce client comme No Show ?')) return;
+    try{
+      const body={};
+      body[F.etat]='No Show';
+      await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/${rowId}/?user_field_names=true`,{
+        method:'PATCH',
+        headers:{'Authorization':'Token '+SESSION.token,'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+      // Retire la carte du kanban
+      [cardId,'d-'+cardId].forEach(id=>{
+        const c=document.getElementById(id);
+        if(c){
+          c.style.transition='opacity 0.3s';
+          c.style.opacity='0';
+          setTimeout(()=>c.remove(),300);
+        }
+      });
+      updateCount(0,-1);
+      showToast('Marque comme No Show');
+    }catch(e){showToast('Erreur',true);}
   }
 
   // FORMULAIRE PRET
