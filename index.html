@@ -222,7 +222,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -276,9 +276,14 @@
 
   function parseTime(dateRaw){
     if(!dateRaw) return '';
-    const parts=dateRaw.split('T');
-    if(parts.length<2) return '';
-    return parts[1].substring(0,5).replace(':','H');
+    // Convertir UTC vers heure locale Sherbrooke (EDT = UTC-4)
+    try{
+      const d = new Date(dateRaw);
+      if(isNaN(d.getTime())) return '';
+      const hours = String((d.getUTCHours() - 4 + 24) % 24).padStart(2,'0');
+      const mins  = String(d.getUTCMinutes()).padStart(2,'0');
+      return hours + 'H' + mins;
+    }catch(e){ return ''; }
   }
 
   function getField(row, ...keys){
@@ -355,20 +360,35 @@
       const res=await fetch(`${BASE_URL}/database/rows/table/${SESSION.tableInterventions}/?user_field_names=true&size=200`,{headers:{'Authorization':'Token '+SESSION.token}});
       const data=await res.json();
       console.log('Sample row:', data.results&&data.results[0]);
-      // Filtre cote JS: garde seulement les interventions du jour ET celles En cours/Pret (peu importe la date)
+      // Filtre cote JS: interventions du jour (EDT) + celles En cours/Pret
+      const todayEDT = (()=>{
+        const d = new Date();
+        const offset = -4; // EDT = UTC-4
+        const local = new Date(d.getTime() + offset*60*60*1000);
+        return local.toISOString().split('T')[0];
+      })();
+      console.log('Today EDT:', todayEDT);
+
       const filtered = data.results ? data.results.filter(row => {
         const etatRaw = row['État'] || row['Etat'] || '';
         const etatVal = (typeof etatRaw === 'object' && etatRaw) ? (etatRaw.value||'') : String(etatRaw||'');
         const isEnCours = etatVal.toLowerCase().includes('cours');
         const isPret = etatVal.toLowerCase().includes('pr');
-        // Interventions en cours ou pret: toujours afficher
         if(isEnCours || isPret) return true;
-        // Interventions a faire: seulement si date = aujourd'hui
         const dateRaw = row['Date'] || '';
         if(!dateRaw) return false;
-        const dateOnly = dateRaw.split('T')[0];
-        return dateOnly === todayISO;
+        // Convertir la date UTC en EDT pour comparer
+        try{
+          const d = new Date(dateRaw);
+          const offset = -4;
+          const local = new Date(d.getTime() + offset*60*60*1000);
+          const dateLocal = local.toISOString().split('T')[0];
+          return dateLocal === todayEDT;
+        }catch(e){
+          return dateRaw.split('T')[0] === todayEDT;
+        }
       }) : [];
+      console.log('Interventions today:', filtered.length, '/', data.results&&data.results.length);
       filtered.forEach(row=>renderCard(row));
       const addBtnM=document.createElement('button');addBtnM.className='add-btn-mobile';addBtnM.textContent='+ Ajouter un RDV';addBtnM.onclick=()=>openModal('modal-add');
       document.getElementById('m-panel-0').appendChild(addBtnM);
