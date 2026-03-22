@@ -79,6 +79,10 @@
     .undo-cancel{flex:1;padding:9px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:600;border-radius:var(--radius-sm);border:1px solid rgba(250,199,117,0.3);background:rgba(250,199,117,0.06);color:#FAC775;cursor:pointer;}
     .countdown-bar{height:2px;background:var(--border);border-radius:99px;margin-top:8px;overflow:hidden;}
     .countdown-fill{height:100%;background:var(--green);border-radius:99px;width:100%;}
+    .rdv-urgent{background:rgba(255,77,77,0.15)!important;color:#ff4d4d!important;border:1px solid rgba(255,77,77,0.3)!important;animation:pulse 1.5s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+    .urgent-banner{font-size:11px;font-weight:700;color:#ff4d4d;background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);border-radius:6px;padding:5px 9px;margin-bottom:8px;letter-spacing:0.3px;}
+    .client-line{font-size:11px;color:var(--text-3);font-weight:500;margin-top:3px;margin-bottom:6px;padding-left:2px;}
     .sms-tag{display:inline-flex;align-items:center;gap:5px;margin-top:9px;font-size:11px;font-weight:600;color:var(--green);background:var(--green-dim2);padding:3px 9px;border-radius:99px;border:1px solid rgba(131,247,82,0.15);}
     .sms-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px rgba(131,247,82,0.7);}
     .add-btn-mobile{width:100%;margin-top:4px;padding:11px;font-size:12px;font-family:'Montserrat',sans-serif;font-weight:600;letter-spacing:0.3px;border-radius:var(--radius);border:1.5px dashed rgba(131,247,82,0.25);background:var(--green-dim2);color:var(--green);cursor:pointer;}
@@ -222,7 +226,7 @@
 
 <script>
   const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
+  const MASTER_TOKEN  = 'TON_TOKEN_MAITRE_ICI';
   const GARAGES_TABLE = '801';
   let SESSION = null;
   let refreshTimer = null;
@@ -275,15 +279,19 @@
   };
 
   function parseTime(dateRaw){
-    if(!dateRaw) return '';
-    // Convertir UTC vers heure locale Sherbrooke (EDT = UTC-4)
+    if(!dateRaw) return {str:'', urgent:false};
     try{
       const d = new Date(dateRaw);
-      if(isNaN(d.getTime())) return '';
+      if(isNaN(d.getTime())) return {str:'', urgent:false};
       const hours = String((d.getUTCHours() - 4 + 24) % 24).padStart(2,'0');
       const mins  = String(d.getUTCMinutes()).padStart(2,'0');
-      return hours + 'H' + mins;
-    }catch(e){ return ''; }
+      const str = hours + 'H' + mins;
+      // Urgent si RDV dans moins de 30 min et pas encore commence
+      const now = new Date();
+      const diffMin = (d - now) / 60000;
+      const urgent = diffMin >= 0 && diffMin <= 30;
+      return {str, urgent};
+    }catch(e){ return {str:'', urgent:false}; }
   }
 
   function getField(row, ...keys){
@@ -291,7 +299,14 @@
     return null;
   }
 
-  function extractVehicle(v){
+  function extractVehicle(v, rowData){
+    // Essaie de construire "Marque Modele" depuis les champs directs de la ligne
+    const marque = rowData ? (getField(rowData,'Marque','marque')||'') : '';
+    const modele = rowData ? (getField(rowData,'Modele','Modèle','modele')||'') : '';
+    if(marque && modele) return {name: marque+' '+modele, plaque:''};
+    if(modele) return {name: modele, plaque:''};
+
+    // Sinon depuis le champ lié Véhicules
     if(!v) return {name:'--',plaque:''};
     if(typeof v==='string'&&v.trim()) return {name:v,plaque:''};
     if(Array.isArray(v)&&v.length>0){
@@ -389,6 +404,12 @@
         }
       }) : [];
       console.log('Interventions today:', filtered.length, '/', data.results&&data.results.length);
+      // Trier par heure (UTC)
+      filtered.sort((a,b)=>{
+        const da = new Date(a['Date']||'9999');
+        const db = new Date(b['Date']||'9999');
+        return da - db;
+      });
       filtered.forEach(row=>renderCard(row));
       const addBtnM=document.createElement('button');addBtnM.className='add-btn-mobile';addBtnM.textContent='+ Ajouter un RDV';addBtnM.onclick=()=>openModal('modal-add');
       document.getElementById('m-panel-0').appendChild(addBtnM);
@@ -411,24 +432,25 @@
 
     // Vehicule
     const vRaw = getField(row, F.vehicules, 'Vehicules', 'vehicules');
-    const {name: vehicleName} = extractVehicle(vRaw);
+    const {name: vehicleName} = extractVehicle(vRaw, row);
 
-    // Plaque — chercher dans les donnees liees du vehicule
-    let plaque = '';
-    if(vRaw && Array.isArray(vRaw) && vRaw[0]){
-      // Baserow retourne parfois la plaque dans le display
-      const display = vRaw[0].value || vRaw[0].display_name || '';
-      // Si le vehicule a plusieurs champs, le display peut inclure marque+modele
-      plaque = '';
-    }
-    // Plaque directe sur la ligne si elle existe
+    // Plaque directe sur la ligne intervention si elle existe
     const plaqueDirect = getField(row, 'Plaque', 'plaque');
-    if(plaqueDirect) plaque = plaqueDirect;
+    let plaque = plaqueDirect || '';
+
+    // Nom du client — depuis le champ Client lié au vehicule (si disponible sur la ligne)
+    let clientName = '';
+    const clientRaw = getField(row, 'Client', 'client');
+    if(clientRaw){
+      if(typeof clientRaw === 'string') clientName = clientRaw;
+      else if(Array.isArray(clientRaw) && clientRaw[0]) clientName = clientRaw[0].value || clientRaw[0].display_name || '';
+      else if(clientRaw.value) clientName = clientRaw.value;
+    }
 
     const travaux = getField(row, F.travaux, 'Travaux a faire', 'travaux') || '--';
     const tech = getField(row, 'Technicien', 'technicien') || '--';
     const porte = getField(row, F.porte, 'Numero de porte', 'porte') || '?';
-    const timeStr = parseTime(getField(row, 'Date', 'date') || '');
+    const {str: timeStr, urgent: timeUrgent} = parseTime(getField(row, 'Date', 'date') || '');
     const rowId = row['id'];
     const cardId = 'card-'+rowId;
 
@@ -443,11 +465,22 @@
     const badgeClass = col===0?'badge-todo':col===1?'badge-progress':'badge-ready';
     const badgeLabel = col===0?'A faire':col===1?'En cours':'Pret';
 
-    // Meta row — toujours affiche vehicule + plaque, avec ou sans numero de porte selon col
+    // Badge heure — rouge si urgent
+    const timeHtml = timeStr
+      ? `<span class="rdv-time${timeUrgent&&col===0?' rdv-urgent':''}">${timeStr}</span>`
+      : '';
+
+    // Meta row
     const plaqueHtml = plaque ? `<span class="plaque-badge">${plaque}</span>` : '';
+    const clientHtml = clientName ? `<div class="client-line">${clientName}</div>` : '';
     const metaRow = col < 2
-      ? `<div class="meta-row"><span class="door-num">${porte}</span><span class="vehicle-name">${vehicleName}</span>${plaqueHtml}</div>`
-      : `<div class="meta-row"><span class="vehicle-name">${vehicleName}</span>${plaqueHtml}</div>`;
+      ? `<div class="meta-row"><span class="door-num">${porte}</span><span class="vehicle-name">${vehicleName}</span>${plaqueHtml}</div>${clientHtml}`
+      : `<div class="meta-row"><span class="vehicle-name">${vehicleName}</span>${plaqueHtml}</div>${clientHtml}`;
+
+    // Alerte 30 min
+    const urgentBanner = timeUrgent && col===0
+      ? `<div class="urgent-banner">RDV dans moins de 30 min</div>`
+      : '';
 
     const smsTag = col===2 ? `<div class="sms-tag"><span class="sms-dot"></span>SMS envoye au client</div>` : '';
     let actionBtn = '';
@@ -455,8 +488,9 @@
     else if(col===1) actionBtn=`<button class="action-btn" onclick="openPretForm('${cardId}',1,${rowId})">Marquer comme pret</button>`;
 
     card.innerHTML=`
-      <div class="card-head"><span class="client-name">${travaux}</span>${timeStr?`<span class="rdv-time">${timeStr}</span>`:''}</div>
+      <div class="card-head"><span class="client-name">${travaux}</span>${timeHtml}</div>
       ${metaRow}
+      ${urgentBanner}
       <div class="divider"></div>
       <div class="card-foot"><span class="service-badge ${badgeClass}">${badgeLabel}</span><span class="tech-name">${tech}</span></div>
       ${smsTag}${actionBtn}`;
