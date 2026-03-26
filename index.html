@@ -227,9 +227,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const BASE_URL      = 'https://db.agenceupflow.com/api';
-  const MASTER_TOKEN  = 'KcSmR0zqpykMlsgBvvkQhB1J909cThKk';
-  const GARAGES_TABLE = '801';
+  let BASE_URL = null;
+  let MASTER_TOKEN = null;
+  let GARAGES_TABLE = null;
   let SESSION = null;
   let refreshTimer = null;
 
@@ -343,10 +343,19 @@
     document.getElementById('garage-title').textContent=SESSION.garageName;
   }
 
-  try{const s=localStorage.getItem('upflow_s');if(s){SESSION=JSON.parse(s);showApp();loadInterventions();}}catch(e){localStorage.removeItem('upflow_s');}
-
-  document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  document.getElementById('login-username').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  async function initApp(){
+    try{
+      const r=await fetch('/api/config');
+      const cfg=await r.json();
+      BASE_URL=cfg.baseUrl;
+      MASTER_TOKEN=cfg.masterToken;
+      GARAGES_TABLE=cfg.garagesTable;
+    }catch(e){console.error('Config load error',e);}
+    document.getElementById('login-password').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+    document.getElementById('login-username').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+    try{const s=localStorage.getItem('upflow_s');if(s){SESSION=JSON.parse(s);showApp();loadInterventions();}}catch(e){localStorage.removeItem('upflow_s');}
+  }
+  initApp();
 
   async function doLogin(){
     const username=document.getElementById('login-username').value.trim();
